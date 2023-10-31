@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       #Checkcs out repo to find bas script. Only runs this flow if creating/updating release pr.
-      - name: Checkout code
-        uses: obviux/get_pr_number@v1.0.1
+      - name: Test action
+        uses: obviux/get_pr_number@v1.0.2
         with:
           pr_string: "fish:dog cat:cheese number:5 horse:duck"
