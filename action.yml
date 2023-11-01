@@ -1,16 +1,22 @@
-name: 'Get release types'
+name: 'Get pr labels'
 description: 'Get release types of pr identified by having commit_sha=github.event.release.target_commitish'
 inputs:
   target_commitish:
     description: 'The string to extract PR number from'
     required: true
+  desired_labels:
+    description: 'The labels to search for'
+    required: true
 outputs:
-  is_app_release:
-    description: 'The extracted PR number'
-    value: ${{ steps.get_release_type.outputs.is_app_release }}
-  pr_number:
-    description: 'The extracted PR number'
-    value: ${{ steps.get_release_type.outputs.is_terraform_release }}  
+  found_labels:
+    description: 'JSON mapping each desired label to true or false'
+    value: ${{ steps.get_release_type.outputs.found_labels }}
+  # is_app_release:
+  #   description: 'Whether it is an app release'
+  #   value: ${{ steps.get_release_type.outputs.is_app_release }}
+  # is_terraform_release:
+  #   description: 'The extracted PR number'
+  #   value: ${{ steps.get_release_type.outputs.is_terraform_release }}  
 runs:
   using: 'composite'
   steps:
@@ -28,15 +34,40 @@ runs:
             break
           fi
         done
+        echo $pr_idx
 
-        label_list_string=$(echo $output | jq ".[$pr_idx].labels[].name")
+        # Start the JSON string with an opening brace.
+        json_string="{" 
+        echo $json_string
 
-        if echo "$label_list_string" | grep -q '"app"'; then
-            echo "is_app_release=true" >> $GITHUB_OUTPUT
-        fi
+        # Loop over the desired labels.
+        for label in "${desired_labels[@]}"; do
+          # Check if the label is found and add it to the JSON string.
+          if echo "$label_list_string" | grep -q "\"$label\""; then
+            json_string+="\"$label\":true, "
+          else
+            json_string+="\"$label\":false, "
+          fi
+          echo $json_string
+        done
 
-        if echo "$label_list_string" | grep -q '"terraform"'; then
-            echo "is_terraform_release=true" >> $GITHUB_OUTPUT
-        fi
+        # Remove the trailing comma and space, and add a closing brace.
+        json_string="${json_string%, }"
+        echo $json_string
+        json_string+="}"
+        echo $json_string
+
+        # Write the JSON string to the output file.
+        echo "found_labels=$json_string" >> $GITHUB_OUTPUT
+
+      # if echo "$label_list_string" | grep -q '"app"'; then
+      #     echo "is_app_release=true" >> $GITHUB_OUTPUT
+      # fi
+
+      # if echo "$label_list_string" | grep -q '"terraform"'; then
+      #     echo "is_terraform_release=true" >> $GITHUB_OUTPUT
+      # fi
+        
+
 
       shell: bash
