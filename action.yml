@@ -37,9 +37,10 @@ runs:
         echo $pr_idx
 
         label_list_string=$(echo $output | jq ".[$pr_idx].labels[].name")
+        desired_labels=(${{inputs.desired_labels}})
 
         # Convert the desired_labels string into an array.
-        IFS=' ' read -r -a desired_labels <<< "${{inputs.desired_labels}}"
+        # IFS=' ' read -r -a desired_labels <<< "${{inputs.desired_labels}}"
 
         # Start the JSON string with an opening brace.
         json_string="{" 
@@ -47,7 +48,7 @@ runs:
 
         # Loop over the desired labels.
         echo $desired_labels
-        for label in $desired_labels; do
+        for label in "${desired_labels[@]}"; do
           # Check if the label is found and add it to the JSON string.
           if echo "$label_list_string" | grep -q "\"$label\""; then
             json_string+="\"$label\":true, "
