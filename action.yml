@@ -41,7 +41,8 @@ runs:
         echo $json_string
 
         # Loop over the desired labels.
-        for label in "${desired_labels[@]}"; do
+        echo $desired_labels
+        for label in $desired_labels; do
           # Check if the label is found and add it to the JSON string.
           if echo "$label_list_string" | grep -q "\"$label\""; then
             json_string+="\"$label\":true, "
@@ -50,8 +51,17 @@ runs:
           fi
           echo $json_string
         done
+        # for label in "${desired_labels[@]}"; do
+        #   # Check if the label is found and add it to the JSON string.
+        #   if echo "$label_list_string" | grep -q "\"$label\""; then
+        #     json_string+="\"$label\":true, "
+        #   else
+        #     json_string+="\"$label\":false, "
+        #   fi
+        #   echo $json_string
+        # done
 
-        # Remove the trailing comma and space, and add a closing brace.
+        # Remove the trailing comma and space, a nd add a closing brace.
         json_string="${json_string%, }"
         echo $json_string
         json_string+="}"
