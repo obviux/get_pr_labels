@@ -18,8 +18,9 @@ runs:
   steps:
     - id: get_pr_labels
       run: |
-        pr_count=$(gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/$GITHUB_REPOSITORY/pulls?state=all | jq length)
+        # pr_count=$(gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/$GITHUB_REPOSITORY/pulls?state=all | jq length)
         output=$(gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/$GITHUB_REPOSITORY/pulls?state=all)
+        pr_count=$(echo "$output" | jq length)
 
         for ((i=0; i<$pr_count; i++)); do
           commit_sha=$(echo $output | jq -r ".[$i].merge_commit_sha")
