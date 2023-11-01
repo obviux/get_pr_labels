@@ -3,7 +3,7 @@ name: Release management
 on:
   push:
     branches:
-      - NO
+      - master
 
 jobs:
   release-management:
