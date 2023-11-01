@@ -36,6 +36,11 @@ runs:
         done
         echo $pr_idx
 
+        label_list_string=$(echo $output | jq ".[$pr_idx].labels[].name")
+
+        # Convert the desired_labels string into an array.
+        IFS=' ' read -r -a desired_labels <<< "${{inputs.desired_labels}}"
+
         # Start the JSON string with an opening brace.
         json_string="{" 
         echo $json_string
