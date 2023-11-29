@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.7](https://github.com/obviux/get_pr_labels/compare/v1.0.6...v1.0.7) (2023-11-29)
+
+
+### Miscellaneous
+
+* **deps:** bump GoogleCloudPlatform/release-please-action from 2 to 3 ([ff1d67a](https://github.com/obviux/get_pr_labels/commit/ff1d67a6e284e82834942cfe147555a5a1cb2ea4))
+
 ### [1.0.6](https://www.github.com/obviux/get_pr_labels/compare/v1.0.5...v1.0.6) (2023-11-01)
 
 
